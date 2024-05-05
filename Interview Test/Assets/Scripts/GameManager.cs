@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -18,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject Player;
     [SerializeField]
+    private GameObject Player_Body;
+    [SerializeField]
     private GameObject Player_Spawn;
     [SerializeField]
     private GameObject MainUI;
@@ -26,15 +27,22 @@ public class GameManager : MonoBehaviour
 
     //Public Variables
     public int Level_Select;
+    public bool isPlaying = false;
 
     //Private Variables
-    private Vector3 Box_Spawning = new Vector3(5,0,0);
+    private Vector3 Box_Spawning = new Vector3(7.5f,0,0);
+    private GameObject Boss_Room;
+    private List<GameObject> Obstacle_Room = new List<GameObject>();
 
 
     //On the start of the game
     private void Start()
     {
         UIManager = MainUI.GetComponent<UIManager>();
+    }
+    private void Update()
+    {
+
     }
     public void StartEasyMode()
     {
@@ -58,10 +66,11 @@ public class GameManager : MonoBehaviour
     private void SetLevel()
     {
         for(int i = 0; i<Level_Select; i++){
-            Instantiate(Obstacle_Box, Box_Spawning, Quaternion.identity);
-            Box_Spawning.x += 5;
+            GameObject created = Instantiate(Obstacle_Box, Box_Spawning, Quaternion.identity);
+            Obstacle_Room.Add(created);
+            Box_Spawning.x += 10;
         }
-        Instantiate(Boss_Box, Box_Spawning, Quaternion.identity);
+        Boss_Room = Instantiate(Boss_Box, Box_Spawning, Quaternion.identity);
     }
     public IEnumerator Countdown(int seconds)
     {
@@ -77,7 +86,23 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         UIManager.HideMenu();
+        Player_Body.GetComponent<Body>().gameOver = false;
         SetLevel();
         UIManager.SetLevelText(Level_Select);
+        isPlaying = true;
+    }
+    public void EndGame()
+    {
+        isPlaying = false;
+        UIManager.ShowMenu();
+        UIManager.ResetMenu();
+        for(int i = 0;i < Obstacle_Room.Count; i++)
+        {
+            GameObject.Destroy(Obstacle_Room[i]);
+        }
+        Obstacle_Room.Clear();
+        Destroy(Boss_Room);
+        Boss_Room = null;
+        Box_Spawning = new Vector3(7.5f, 0, 0);
     }
 }
