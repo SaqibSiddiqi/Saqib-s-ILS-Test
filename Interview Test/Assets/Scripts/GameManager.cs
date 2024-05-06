@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     {
         Level_Select = Level_Select * Level_Select;
     }
+    //Spawn the obsticales based on the level
     private void SetLevel()
     {
         for(int i = 0; i<Level_Select; i++){
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
         }
         Boss_Room = Instantiate(Boss_Box, Box_Spawning, Quaternion.identity);
     }
+    //Start the start game countdown
     public IEnumerator Countdown(int seconds)
     {
         int count = seconds;
@@ -83,6 +85,7 @@ public class GameManager : MonoBehaviour
         }
         StartGame();
     }
+    //Start game sequence
     void StartGame()
     {
         UIManager.HideMenu();
@@ -91,10 +94,11 @@ public class GameManager : MonoBehaviour
         UIManager.SetLevelText(Level_Select);
         isPlaying = true;
     }
-    public void EndGame()
+    //On game End, with Game condition define win or loss conditions
+    public void EndGame(int gameCondition)
     {
         isPlaying = false;
-        UIManager.ShowMenu();
+        UIManager.ShowMenu(gameCondition);
         UIManager.ResetMenu();
         for(int i = 0;i < Obstacle_Room.Count; i++)
         {

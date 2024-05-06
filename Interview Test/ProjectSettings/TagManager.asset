@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Structure
   - Obstacle
+  - Boss_Area
+  - Weapon
+  - Boss
   layers:
   - Default
   - TransparentFX
